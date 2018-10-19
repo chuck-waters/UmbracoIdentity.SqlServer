@@ -1,0 +1,14 @@
+﻿Inside of UmbracoIdentityStartup.cs
+
+Replace the following line:
+    app.ConfigureUserManagerForUmbracoMembers<UmbracoApplicationMember>();", "ApplicationContext appContext = ApplicationContext.Current;
+    
+With this code block:    
+    ApplicationContext appContext = ApplicationContext.Current;
+    var membershipProvider = Membership.Providers["UmbracoMembershipProvider"] as IdentityEnabledMembersMembershipProvider;
+    SqlServerExternalLoginStore externalLoginStore = new SqlServerExternalLoginStore();
+    UmbracoMembersUserStore<UmbracoApplicationMember> customUserStore = new UmbracoMembersUserStore<UmbracoApplicationMember>(appContext.Services.MemberService, membershipProvider, externalLoginStore);
+    app.ConfigureUserManagerForUmbracoMembers<UmbracoApplicationMember>(customUserStore, appContext, null);
+    
+    
+Also, in the Tools folder for this package, there is a utility to convert existing data from SQL CE to SQL Server if that is also needed.

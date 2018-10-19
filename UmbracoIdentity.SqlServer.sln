@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExternalLoginsConversion", "ExternalLoginsConversion\ExternalLoginsConversion.csproj", "{EC833446-1170-4221-BC26-903F9A00E127}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbracoIdentity.SqlServer", "UmbracoIdentity.SqlServer\UmbracoIdentity.SqlServer.csproj", "{7E8376F9-7071-4745-9317-8AD45B66DFA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC833446-1170-4221-BC26-903F9A00E127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC833446-1170-4221-BC26-903F9A00E127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC833446-1170-4221-BC26-903F9A00E127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC833446-1170-4221-BC26-903F9A00E127}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E8376F9-7071-4745-9317-8AD45B66DFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E8376F9-7071-4745-9317-8AD45B66DFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E8376F9-7071-4745-9317-8AD45B66DFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E8376F9-7071-4745-9317-8AD45B66DFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C32F255E-1F61-47FE-97AC-36AC1839DB74}
+	EndGlobalSection
+EndGlobal

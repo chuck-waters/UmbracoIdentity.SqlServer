@@ -10,84 +10,96 @@ namespace UmbracoIdentity.SqlServer
 {
     public class SqlServerExternalLoginStore : DisposableObject, IExternalLoginStore
     {
-        private readonly ExternalLoginsContext dbContext;
+        //private readonly ExternalLoginsContext dbContext;
 
         public SqlServerExternalLoginStore()
         {
-            this.dbContext = new ExternalLoginsContext();
+            //this.dbContext = new ExternalLoginsContext();
         }
 
         public void DeleteUserLogins(int memberId)
         {
-            using (var dbTransaction = dbContext.Database.BeginTransaction())
+            using (var dbContext = new ExternalLoginsContext())
             {
-                try
+                using (var dbTransaction = dbContext.Database.BeginTransaction())
                 {
-                    dbContext.Database.ExecuteSqlCommand("DELETE FROM ExternalLogins WHERE UserId=@userId", new SqlParameter("@userId", memberId));
-                    dbContext.SaveChanges();
-                    dbTransaction.Commit();
+                    try
+                    {
+                        dbContext.Database.ExecuteSqlCommand("DELETE FROM ExternalLogins WHERE UserId=@userId", new SqlParameter("@userId", memberId));
+                        dbContext.SaveChanges();
+                        dbTransaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        dbTransaction.Rollback();
+                    }
                 }
-                catch (Exception)
-                {
-                    dbTransaction.Rollback();
-                }                
             }
         }
 
         public IEnumerable<int> Find(UserLoginInfo login)
         {
-            var userId = dbContext.ExternalLogins
+            IEnumerable<int> userId;
+            using (var dbContext = new ExternalLoginsContext())
+            {
+                userId = dbContext.ExternalLogins
                             .Where(e => e.LoginProvider == login.LoginProvider
                                 && e.ProviderKey == login.ProviderKey)
                             .Select(e => e.UserId).ToList();
-
+            }
             return userId;
         }
 
         public IEnumerable<IdentityMemberLogin<int>> GetAll(int userId)
         {
-            var users = dbContext.ExternalLogins
+            IEnumerable<IdentityMemberLogin<int>> users;
+            using (var dbContext = new ExternalLoginsContext())
+            {
+                users = dbContext.ExternalLogins
                             .Where(e => e.UserId == userId)
                             .Select(e => new IdentityMemberLogin<int>
                             {
                                 LoginProvider = e.LoginProvider,
                                 ProviderKey = e.ProviderKey,
-                                UserId = e.UserId                                
+                                UserId = e.UserId
                             });
-
+            }
             return users.ToList();
         }
 
         public void SaveUserLogins(int memberId, IEnumerable<UserLoginInfo> logins)
         {
-            using (var dbTransaction = dbContext.Database.BeginTransaction())
+            using (var dbContext = new ExternalLoginsContext())
             {
-                try
+                using (var dbTransaction = dbContext.Database.BeginTransaction())
                 {
-                    dbContext.Database.ExecuteSqlCommand("DELETE FROM ExternalLogins WHERE UserId=@userId", new SqlParameter("@userId", memberId));
-                    foreach (var login in logins)
+                    try
                     {
-                        dbContext.ExternalLogins.Add(new Models.ExternalLogin()
+                        dbContext.Database.ExecuteSqlCommand("DELETE FROM ExternalLogins WHERE UserId=@userId", new SqlParameter("@userId", memberId));
+                        foreach (var login in logins)
                         {
-                            LoginProvider = login.LoginProvider,
-                            ProviderKey = login.ProviderKey,
-                            UserId = memberId
-                        });
+                            dbContext.ExternalLogins.Add(new Models.ExternalLogin()
+                            {
+                                LoginProvider = login.LoginProvider,
+                                ProviderKey = login.ProviderKey,
+                                UserId = memberId
+                            });
+                        }
+                        dbContext.SaveChanges();
+                        dbTransaction.Commit();
                     }
-                    dbContext.SaveChanges();
-                    dbTransaction.Commit();
-                }
-                catch (Exception)
-                {
-                    dbTransaction.Rollback();
-                    throw;
+                    catch (Exception)
+                    {
+                        dbTransaction.Rollback();
+                        throw;
+                    }
                 }
             }
         }
 
         protected override void DisposeResources()
         {
-            this.dbContext.Dispose();
+            //this.dbContext.Dispose();
         }
     }
 }

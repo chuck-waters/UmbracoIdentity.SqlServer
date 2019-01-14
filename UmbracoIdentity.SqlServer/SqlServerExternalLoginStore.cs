@@ -62,7 +62,7 @@ namespace UmbracoIdentity.SqlServer
                                 LoginProvider = e.LoginProvider,
                                 ProviderKey = e.ProviderKey,
                                 UserId = e.UserId
-                            });
+                            }).ToList();
             }
             return users.ToList();
         }
